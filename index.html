@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Subscriber Search</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input { padding: 8px; width: 300px; margin-bottom: 10px; }
+    button { padding: 8px 12px; }
+    .result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; width: 600px; background: #f9f9f9; }
+    .result div { margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <h2>🔍 Subscriber Search</h2>
+<h3 style="color: green; text-align: left; margin-top: 0;">PHK FBB_YGN</h3>
+  <input type="text" id="searchInput" placeholder="Search Subscriber Node" />
+  <button onclick="search()">Search</button>
+
+  <div id="result" class="result" style="display:none;"></div>
+
+  <script>
+    let csvData = [];
+
+    Papa.parse("data.csv", {
+      download: true,
+      header: true,
+      complete: function(results) {
+        csvData = results.data;
+      }
+    });
+
+function search() {
+  const query = document.getElementById("searchInput").value.trim().toLowerCase();
+  const resultDiv = document.getElementById("result");
+
+  const matches = csvData.filter(row =>
+    (row["SN"] || "").toLowerCase().includes(query) ||
+     );
+
+  if (matches.length > 0) {
+    resultDiv.innerHTML = matches.map(match => `
+      <div style="margin-bottom: 15px;">
+        <div><strong>SN:</strong> ${match["SN"]}</div>
+        <div><strong>CUSTOMER_NAME:</strong> ${match["CUSTOMER_NAME"]}</div>
+               <hr/>
+      </div>
+    `).join('');
+    resultDiv.style.display = "block";
+  } else {
+    resultDiv.innerHTML = "<em>No results found.</em>";
+    resultDiv.style.display = "block";
+  }
+}
+
+  </script>
+</body>
+</html>
